@@ -1,6 +1,6 @@
 name: Test → Main pipeline
 
-# Run on every push to dev
+# Run on every push to test
 on:
   push:
     branches:
@@ -43,12 +43,12 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: sync from dev → main"
-          branch: "chore/sync-dev-to-main"    # temporary branch used to create PR
+          commit-message: "chore: sync from test → main"
+          branch: "chore/sync-test-to-main"    # temporary branch used to create PR
           base: "main"
-          title: "Sync changes from dev to main"
+          title: "Sync changes from test to main"
           body: |
-            This pull request was automatically created by the CI pipeline after a push to dev.
+            This pull request was automatically created by the CI pipeline after a push to test.
             It includes linting checks and is set to automerge when checks pass.
           labels: "automerge"
           automerge: true
