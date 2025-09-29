@@ -1,18 +1,16 @@
-name: Test → Main pipeline
+name: test → Main pipeline
 
-# Run on every push to test
 on:
   push:
     branches:
       - test
 
-# Permissions required to create PRs and update contents
 permissions:
-  contents: write          # needed for create-pull-request to push branches
-  pull-requests: write     # needed to create & enable automerge on PR
+  contents: write
+  pull-requests: write
 
 jobs:
-  lint-and-create-pr:
+  sync-test-to-main:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,36 +18,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node (for linters / build) 
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-
-      - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else echo "no package.json found, skipping npm install"; fi
-
-      - name: Run linters / tests
-        run: |
-          # adjust to your actual commands; these are examples
-          if npm run -s lint; then
-            echo "Lint passed"
-          else
-            echo "Lint failed" && exit 1
-          fi
-        # If you don't use Node/linters, replace above with any checks you want.
-
       - name: Create or update PR to main
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: sync from test → main"
-          branch: "chore/sync-test-to-main"    # temporary branch used to create PR
+          commit-message: "chore: sync from dev → main"
+          branch: "chore/sync-dev-to-main"
           base: "main"
-          title: "Sync changes from test to main"
+          title: "Sync changes from dev to main"
           body: |
-            This pull request was automatically created by the CI pipeline after a push to test.
-            It includes linting checks and is set to automerge when checks pass.
+            Auto-generated PR from dev branch.
           labels: "automerge"
-          automerge: true
-          automerge-method: merge
